@@ -103,10 +103,3 @@ and with this trust relationship
 }
 ```
 Note: `ecsTaskExecutionRole` will be created automatically when you create ECS service.
-
-
-
-## test example
-
-![image](https://github.com/user-attachments/assets/685ec234-bde1-46e2-abfa-2f2a86f886c1)
-
