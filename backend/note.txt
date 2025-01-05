@@ -1,0 +1,6 @@
+docker run --name standalone-postgres \
+  -e POSTGRES_USER=postgres \
+  -e POSTGRES_PASSWORD=test \
+  -e POSTGRES_DB=pgWithNest \
+  -p 5432:5432 \
+  -d postgres:15

@@ -1,0 +1,49 @@
+services:
+  
+  # PostgreSQL service
+  postgresdb:
+    image: postgres
+    container_name: poc-postgres
+    environment:
+      POSTGRES_DB: user_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"  # Expose port 5432 for external access
+
+  # Backend service
+  backend:
+    build:
+      context: ./backend/
+      args:
+        ALLOWED_ORIGIN: "http://localhost:8080"
+    container_name: poc-backend
+    environment:
+      ALLOWED_ORIGIN: "http://localhost:8080"
+      DB_NAME: user_db
+      DB_USER: postgres
+      DB_PASS: admin
+      DB_HOST: postgresdb  # Refers to the postgres service via Docker internal DNS
+      DB_PORT: 5432
+      TYPEORM_LOGGING: true
+      TYPEORM_SYNCHRONIZE: true
+      PORT: 4000
+    ports:
+      - "4000:4000"  # Expose port 3000 for external access
+    depends_on:
+      - postgresdb  # Refers to the postgresdb service, ensures Postgres starts before backend
+
+  # Frontend service
+  frontend:
+    build:
+      context: ./frontend/
+      args:
+        NEXT_PUBLIC_API_URL: "http://localhost:4000/user"
+    container_name: poc-frontend
+    environment:
+      NEXT_PUBLIC_API_URL: "http://localhost:4000/user" 
+      PORT: 8080
+    ports:
+      - "8080:8080"  # Expose port 8080 for external access
+    depends_on:
+      - backend
